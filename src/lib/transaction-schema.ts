@@ -27,3 +27,4 @@ export const storedTransactionSchema = transactionFormSchema.extend({
 export const storedTransactionsSchema = z.array(storedTransactionSchema);
 
 export type TransactionFormValues = z.infer<typeof transactionFormSchema>;
+export type TransactionFormInput = z.input<typeof transactionFormSchema>;
