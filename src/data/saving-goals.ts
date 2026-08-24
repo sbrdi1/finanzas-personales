@@ -3,6 +3,7 @@ import "server-only";
 import { auth } from "@/auth";
 import type { SavingGoalFormValues } from "@/lib/saving-goal-schema";
 import { prisma } from "@/lib/prisma";
+import { savingGoalPercentage } from "@/lib/progress";
 import type { SavingGoal } from "@/types/saving-goal";
 
 async function requireUserId() {
@@ -23,7 +24,7 @@ export async function getSavingGoalsForCurrentUser(): Promise<SavingGoal[]> {
       targetAmount,
       savedAmount,
       targetDate: row.targetDate?.toISOString().slice(0, 10) ?? null,
-      percentage: targetAmount ? (savedAmount / targetAmount) * 100 : 0,
+      percentage: savingGoalPercentage(targetAmount, savedAmount),
     };
   });
 }

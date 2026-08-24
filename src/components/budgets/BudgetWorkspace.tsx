@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createBudgetAction, deleteBudgetAction, updateBudgetAction } from "@/app/actions/budgets";
 import { createSavingGoalAction, deleteSavingGoalAction, updateSavingGoalAction } from "@/app/actions/saving-goals";
 import { formatCurrency, formatShortDate } from "@/lib/formatters";
+import { budgetStatus } from "@/lib/progress";
 import type { BudgetProgress, ExpenseCategory } from "@/types/budget";
 import type { SavingGoal } from "@/types/saving-goal";
 
@@ -54,7 +55,7 @@ export function BudgetWorkspace({ budgets, categories, goals, month }: { budgets
       <div className="panel">
         <div className="title"><div><h2>Presupuestos mensuales</h2><p>Límites por categoría de gasto</p></div></div>
         {budgets.length === 0 ? <div className="empty"><b>Sin presupuestos para este mes</b><span>Crea uno para controlar tus gastos.</span></div> : <div className="budget-list">{budgets.map((budget) => {
-          const state = budget.percentage >= 100 ? "over" : budget.percentage >= 80 ? "warning" : "safe";
+          const state = budgetStatus(budget.percentage);
           return <article className={`progress-card ${state}`} key={budget.id}>
             <div className="progress-heading"><span><i style={{ background: budget.color }} />{budget.category}</span><b>{Math.round(budget.percentage)}%</b></div>
             <div className="progress-track"><i style={{ width: `${Math.min(100, budget.percentage)}%` }} /></div>

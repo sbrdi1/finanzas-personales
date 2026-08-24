@@ -3,6 +3,7 @@ import "server-only";
 import { auth } from "@/auth";
 import { expenseCategories } from "@/lib/categories";
 import { prisma } from "@/lib/prisma";
+import { budgetMetrics } from "@/lib/progress";
 import type { BudgetFormValues } from "@/lib/budget-schema";
 import type { BudgetProgress, ExpenseCategory } from "@/types/budget";
 
@@ -51,6 +52,7 @@ export async function getBudgetPageData(month: string): Promise<{ budgets: Budge
     budgets: budgets.map((budget) => {
       const amount = budget.amount.toNumber();
       const spent = spentByCategory.get(budget.categoryId) ?? 0;
+      const metrics = budgetMetrics(amount, spent);
       return {
         id: budget.id,
         categoryId: budget.categoryId,
@@ -59,8 +61,7 @@ export async function getBudgetPageData(month: string): Promise<{ budgets: Budge
         month,
         amount,
         spent,
-        remaining: amount - spent,
-        percentage: amount ? (spent / amount) * 100 : 0,
+        ...metrics,
       };
     }),
   };
