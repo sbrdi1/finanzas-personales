@@ -18,6 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="es"
       className={geist.variable}
+      data-scroll-behavior="smooth"
     >
       <body>{children}</body>
     </html>

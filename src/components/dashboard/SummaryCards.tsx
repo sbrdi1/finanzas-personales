@@ -18,7 +18,7 @@ export function SummaryCards({ current, previous }: SummaryCardsProps) {
   return (
     <section className="summary" aria-label="Resumen financiero">
       <article className="balance">
-        <div><span>Balance del mes</span><i aria-hidden="true">◇</i></div>
+        <div><span>Ahorro del mes</span><i aria-hidden="true">◇</i></div>
         <strong>{formatCurrency(current.balance)}</strong>
         <small>Ingresos menos gastos</small>
       </article>
