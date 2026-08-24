@@ -36,6 +36,7 @@ model User {
   categories        Category[]
   transactions      Transaction[]
   budgets           Budget[]
+  savingGoals       SavingGoal[]
 }
 
 model Account {
@@ -143,4 +144,19 @@ model Budget {
 
   @@unique([userId, categoryId, month])
   @@index([userId, month])
+}
+
+model SavingGoal {
+  id           String    @id @default(cuid())
+  userId       String
+  name         String    @db.VarChar(80)
+  targetAmount Decimal   @db.Decimal(14, 2)
+  savedAmount  Decimal   @default(0) @db.Decimal(14, 2)
+  targetDate   DateTime? @db.Date
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
 }
