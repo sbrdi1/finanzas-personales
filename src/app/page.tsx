@@ -10,15 +10,18 @@ import { SummaryCards } from "@/components/dashboard/SummaryCards";
 import { TransactionForm } from "@/components/dashboard/TransactionForm";
 import { TransactionsTable } from "@/components/dashboard/TransactionsTable";
 import { useTransactions } from "@/hooks/use-transactions";
-import { calculateCategoryBreakdown, calculateTotals, previousMonth, transactionsForMonth } from "@/lib/finance";
+import { calculateCategoryBreakdown, calculateTotals, filterTransactions, previousMonth, transactionsForMonth } from "@/lib/finance";
 import { formatMonth } from "@/lib/formatters";
 import type { TransactionFormValues } from "@/lib/transaction-schema";
-import type { Transaction } from "@/types/transaction";
+import type { Transaction, TransactionFilters } from "@/types/transaction";
+
+const initialFilters: TransactionFilters = { search: "", kind: "all", category: "", date: "" };
 
 export default function Home() {
   const { transactions, isLoaded, createTransaction, updateTransaction, deleteTransaction } = useTransactions();
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [filters, setFilters] = useState<TransactionFilters>(initialFilters);
   const openerRef = useRef<HTMLElement | null>(null);
   const today = useMemo(() => new Date(), []);
 
@@ -27,6 +30,7 @@ export default function Home() {
   const currentTotals = useMemo(() => calculateTotals(currentTransactions), [currentTransactions]);
   const previousTotals = useMemo(() => calculateTotals(previousTransactions), [previousTransactions]);
   const breakdown = useMemo(() => calculateCategoryBreakdown(currentTransactions), [currentTransactions]);
+  const filteredTransactions = useMemo(() => filterTransactions(transactions, filters), [filters, transactions]);
 
   const openCreateForm = useCallback((trigger: HTMLButtonElement) => {
     openerRef.current = trigger;
@@ -67,7 +71,7 @@ export default function Home() {
           <CashFlowChart totals={currentTotals} periodLabel={formatMonth(today)} />
           <CategoryBreakdown breakdown={breakdown} totalExpense={currentTotals.expense} />
         </section>
-        <TransactionsTable transactions={transactions} isLoaded={isLoaded} onAdd={openCreateForm} onEdit={openEditForm} onDelete={deleteTransaction} />
+        <TransactionsTable transactions={filteredTransactions} totalCount={transactions.length} filters={filters} onFiltersChange={setFilters} isLoaded={isLoaded} onAdd={openCreateForm} onEdit={openEditForm} onDelete={deleteTransaction} />
         <footer>Finova · Tus finanzas, más claras.</footer>
       </main>
       {isFormOpen && <TransactionForm transaction={editingTransaction} onCancel={closeForm} onSubmit={saveTransaction} />}

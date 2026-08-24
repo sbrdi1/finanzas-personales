@@ -7,7 +7,11 @@ Finova es una aplicación de una sola página construida con Next.js App Router.
 ## Componentes principales
 
 - `src/app/layout.tsx`: layout raíz, tipografía y metadatos.
-- `src/app/page.tsx`: interfaz, estado de movimientos, cálculos y persistencia local.
+- `src/app/page.tsx`: orquestación del dashboard y estado de interfaz.
+- `src/components/dashboard/`: componentes de presentación del dashboard, tabla y formulario.
+- `src/hooks/use-transactions.ts`: CRUD y persistencia local de movimientos.
+- `src/lib/`: categorías, validación, formato y cálculos financieros reutilizables.
+- `src/types/`: contratos TypeScript del dominio.
 - `src/app/globals.css`: estilos globales y adaptación responsive.
 - `public/`: recursos estáticos.
 
@@ -22,6 +26,8 @@ No existe sincronización entre dispositivos, autenticación ni persistencia del
 - Next.js 16 y React 19 con App Router.
 - TypeScript en modo estricto.
 - Componente cliente para estado e interacción local.
+- Validación con Zod integrada a React Hook Form.
+- Cálculos financieros puros y separados de la presentación.
 - `Intl` para formato de moneda CLP y fechas en español de Chile.
 - CSS responsive sin dependencias de componentes externas.
 

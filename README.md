@@ -4,10 +4,12 @@ Panel responsive de finanzas personales para registrar ingresos y gastos, consul
 
 ## Funcionalidades
 
-- Registro y eliminación de ingresos y gastos.
+- Registro, edición, eliminación y listado de ingresos y gastos.
+- Búsqueda y filtros combinables por tipo, categoría y fecha.
 - Balance, totales y porcentaje de ahorro calculados en tiempo real.
 - Gráficos de flujo y distribución por categoría sin librerías externas.
 - Persistencia en `localStorage`.
+- Validación tipada con Zod y React Hook Form.
 - Interfaz adaptable a escritorio, tablet y móvil.
 - Formato de moneda CLP y fechas en español de Chile.
 
@@ -19,6 +21,7 @@ Panel responsive de finanzas personales para registrar ingresos y gastos, consul
 - Tailwind CSS 4 y CSS global
 - ESLint 9
 - GitHub Actions
+- Zod y React Hook Form
 
 ## Requisitos
 
