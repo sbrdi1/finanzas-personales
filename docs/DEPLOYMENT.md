@@ -1,6 +1,6 @@
 # Despliegue en Vercel
 
-Finova no necesita variables de entorno en su versión actual. Vercel detecta automáticamente Next.js y usa el lockfile de npm.
+Finova necesita una base Neon y credenciales OAuth. Configúralas siguiendo [Base de datos y autenticación](DATABASE_AND_AUTH.md). Vercel detecta automáticamente Next.js y usa el lockfile de npm.
 
 ## Antes de desplegar
 
@@ -20,9 +20,10 @@ Finova no necesita variables de entorno en su versión actual. Vercel detecta au
    - Install Command: `npm install` (automático)
    - Build Command: `next build` (automático)
    - Output Directory: valor administrado por Next.js
-5. No agregues variables de entorno: esta versión no las usa.
+5. Agrega `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `AUTH_GITHUB_ID` y `AUTH_GITHUB_SECRET`.
 6. Selecciona **Deploy**.
-7. Abre la URL generada y verifica crear, recargar y eliminar un movimiento.
+7. Aplica las migraciones con `npm run db:deploy`.
+8. Abre la URL generada y verifica inicio de sesión, creación, edición y eliminación.
 
 ## Despliegues posteriores
 
@@ -42,4 +43,4 @@ Después de cambiar variables, crea un nuevo despliegue. Los valores `NEXT_PUBLI
 
 - Para volver a una versión anterior, abre **Deployments**, selecciona un despliegue válido y usa **Promote to Production**.
 - Si falla el build, revisa sus logs y reproduce localmente con `npm ci && npm run check`.
-- Si los movimientos no aparecen en otro dispositivo, es el comportamiento esperado: se guardan únicamente en el `localStorage` de cada navegador.
+- Si falla una consulta, verifica que la migración esté aplicada y que `DATABASE_URL` apunte a la rama correcta de Neon.

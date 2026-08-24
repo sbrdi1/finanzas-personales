@@ -12,10 +12,11 @@ import type { Transaction } from "@/types/transaction";
 type TransactionFormProps = {
   transaction: Transaction | null;
   onCancel: () => void;
-  onSubmit: (values: TransactionFormValues) => void;
+  onSubmit: (values: TransactionFormValues) => Promise<void>;
+  serverError: string | null;
 };
 
-export function TransactionForm({ transaction, onCancel, onSubmit }: TransactionFormProps) {
+export function TransactionForm({ transaction, onCancel, onSubmit, serverError }: TransactionFormProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const { register, control, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<TransactionFormInput, unknown, TransactionFormValues>({
     resolver: zodResolver(transactionFormSchema),
@@ -61,6 +62,7 @@ export function TransactionForm({ transaction, onCancel, onSubmit }: Transaction
           <label>Monto (CLP)<input {...register("amount", { valueAsNumber: true })} type="number" min="1" inputMode="numeric" placeholder="0" aria-invalid={Boolean(errors.amount)} />{errors.amount && <span className="field-error">{errors.amount.message}</span>}</label>
           {kind === "expense" && <label>Categoría<select {...register("category")} aria-invalid={Boolean(errors.category)}>{expenseCategoryNames.map((category) => <option key={category}>{category}</option>)}</select>{errors.category && <span className="field-error">{errors.category.message}</span>}</label>}
           <label>Fecha<input {...register("date")} type="date" aria-invalid={Boolean(errors.date)} />{errors.date && <span className="field-error">{errors.date.message}</span>}</label>
+          {serverError && <p className="form-error" role="alert">{serverError}</p>}
           <button className="primary save" disabled={isSubmitting}>{transaction ? "Guardar cambios" : "Guardar movimiento"}</button>
         </form>
       </div>

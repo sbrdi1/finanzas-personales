@@ -8,6 +8,6 @@ Incluye una descripción, pasos para reproducir, impacto estimado y una posible 
 
 ## Alcance actual
 
-Finova no usa autenticación, base de datos ni servicios externos. Los movimientos se almacenan en `localStorage` y permanecen en el navegador del usuario. Por ello, esta versión es una demostración y no debe usarse como sistema contable ni para guardar información financiera sensible.
+Finova usa Auth.js, GitHub OAuth y PostgreSQL. Las acciones del servidor validan entradas, sesión y propiedad del recurso. Aun así, el proyecto es educativo y debe someterse a auditoría, monitoreo y pruebas de penetración antes de manejar información financiera real.
 
 Nunca incluyas tokens, credenciales ni archivos `.env` en el repositorio. Las variables privadas no deben llevar el prefijo `NEXT_PUBLIC_`.

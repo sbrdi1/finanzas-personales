@@ -2,30 +2,34 @@
 
 ## Resumen
 
-Finova es una aplicación de una sola página construida con Next.js App Router. La ruta `/` se prerenderiza durante el build y se hidrata en el navegador para habilitar la interacción.
+Finova es una aplicación full stack construida con Next.js App Router. La ruta `/` se renderiza dinámicamente en servidor porque verifica la sesión y consulta PostgreSQL; los componentes interactivos se hidratan en el navegador.
 
 ## Componentes principales
 
 - `src/app/layout.tsx`: layout raíz, tipografía y metadatos.
-- `src/app/page.tsx`: orquestación del dashboard y estado de interfaz.
+- `src/app/page.tsx`: límite de autenticación y composición del dashboard desde servidor.
+- `src/app/actions/`: mutaciones del servidor y revalidación.
 - `src/components/dashboard/`: componentes de presentación del dashboard, tabla y formulario.
-- `src/hooks/use-transactions.ts`: CRUD y persistencia local de movimientos.
+- `src/data/`: capa de acceso a datos `server-only` con autorización por propietario.
 - `src/lib/`: categorías, validación, formato y cálculos financieros reutilizables.
 - `src/types/`: contratos TypeScript del dominio.
+- `prisma/`: modelo relacional y migraciones SQL.
 - `src/app/globals.css`: estilos globales y adaptación responsive.
 - `public/`: recursos estáticos.
 
 ## Modelo de datos
 
-Cada movimiento tiene identificador, descripción, categoría, monto, tipo (`income` o `expense`) y fecha. El navegador guarda la colección bajo la clave `finova-movements` de `localStorage`.
+Cada movimiento pertenece simultáneamente a un usuario, una cuenta financiera y una categoría. PostgreSQL asegura la integridad mediante claves foráneas, índices y restricciones únicas. Los montos usan un decimal exacto y las fechas financieras usan `DATE`.
 
-No existe sincronización entre dispositivos, autenticación ni persistencia del lado del servidor. Borrar los datos del sitio en el navegador elimina los movimientos guardados.
+Auth.js gestiona identidades OAuth y sesiones persistidas. La capa de datos obtiene el usuario desde la sesión y no acepta un `userId` suministrado por el navegador.
 
 ## Decisiones técnicas
 
 - Next.js 16 y React 19 con App Router.
+- Prisma 6.12 por compatibilidad declarada con el adaptador oficial de Auth.js; la actualización a Prisma 7 queda condicionada al soporte de ese adaptador.
 - TypeScript en modo estricto.
-- Componente cliente para estado e interacción local.
+- Server Components para autenticación y lectura de datos.
+- Componentes cliente acotados para formularios, filtros y modales.
 - Validación con Zod integrada a React Hook Form.
 - Cálculos financieros puros y separados de la presentación.
 - `Intl` para formato de moneda CLP y fechas en español de Chile.
@@ -33,4 +37,4 @@ No existe sincronización entre dispositivos, autenticación ni persistencia del
 
 ## Evolución sugerida
 
-Para convertir la demostración en un producto multiusuario, la siguiente etapa debería separar presentación, dominio y acceso a datos; añadir autenticación; validar entradas en servidor; persistir en una base de datos; e incorporar pruebas unitarias y end-to-end.
+La siguiente etapa debería completar presupuestos y cuentas financieras en la interfaz, añadir pruebas unitarias y end-to-end, observabilidad y una estrategia de respaldo y recuperación.

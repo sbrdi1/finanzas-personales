@@ -1,6 +1,6 @@
 # Finova
 
-Panel responsive de finanzas personales para registrar ingresos y gastos, consultar el balance y visualizar la distribución por categorías. Los datos se conservan localmente en el navegador.
+Aplicación full stack de finanzas personales para registrar ingresos y gastos, consultar el balance y visualizar la distribución por categorías. Cada usuario accede a sus datos mediante una sesión protegida.
 
 ## Funcionalidades
 
@@ -8,7 +8,9 @@ Panel responsive de finanzas personales para registrar ingresos y gastos, consul
 - Búsqueda y filtros combinables por tipo, categoría y fecha.
 - Balance, totales y porcentaje de ahorro calculados en tiempo real.
 - Gráficos de flujo y distribución por categoría sin librerías externas.
-- Persistencia en `localStorage`.
+- Persistencia multiusuario en PostgreSQL sobre Neon.
+- Inicio de sesión OAuth con GitHub mediante Auth.js.
+- Server Actions con validación y autorización por propietario.
 - Validación tipada con Zod y React Hook Form.
 - Interfaz adaptable a escritorio, tablet y móvil.
 - Formato de moneda CLP y fechas en español de Chile.
@@ -22,6 +24,8 @@ Panel responsive de finanzas personales para registrar ingresos y gastos, consul
 - ESLint 9
 - GitHub Actions
 - Zod y React Hook Form
+- PostgreSQL, Neon y Prisma ORM
+- Auth.js
 
 ## Requisitos
 
@@ -29,6 +33,8 @@ Panel responsive de finanzas personales para registrar ingresos y gastos, consul
 - npm 10 o superior.
 
 ## Desarrollo local
+
+Primero configura Neon y GitHub OAuth siguiendo [Base de datos y autenticación](docs/DATABASE_AND_AUTH.md).
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
@@ -52,7 +58,7 @@ Abre [http://localhost:3000](http://localhost:3000).
 
 ## Persistencia y privacidad
 
-Esta versión no envía información a un servidor. Los movimientos se guardan bajo la clave `finova-movements` de `localStorage`, por lo que no se comparten entre navegadores o dispositivos y se pierden al borrar los datos del sitio.
+Los movimientos se almacenan en PostgreSQL y quedan asociados al usuario autenticado. Las lecturas y mutaciones verifican la sesión en el servidor y limitan el acceso por propietario.
 
 El proyecto es una demostración educativa; no reemplaza software contable ni asesoría financiera.
 
@@ -60,6 +66,7 @@ El proyecto es una demostración educativa; no reemplaza software contable ni as
 
 - [Arquitectura](docs/ARCHITECTURE.md)
 - [Despliegue paso a paso en Vercel](docs/DEPLOYMENT.md)
+- [Configuración de Neon y Auth.js](docs/DATABASE_AND_AUTH.md)
 - [Guía de contribución](CONTRIBUTING.md)
 - [Política de seguridad](SECURITY.md)
 

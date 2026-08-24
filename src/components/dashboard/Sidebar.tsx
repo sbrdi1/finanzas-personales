@@ -1,4 +1,6 @@
-export function Sidebar() {
+import { logout } from "@/app/actions/auth";
+
+export function Sidebar({ userName }: { userName: string | null }) {
   return (
     <aside>
       <div className="logo"><b>F</b><strong>Finova</strong></div>
@@ -9,7 +11,8 @@ export function Sidebar() {
         <a href="#analisis"><span aria-hidden="true">⌁</span>Análisis</a>
       </nav>
       <div className="account">
-        <div><i aria-hidden="true">FL</i><p><b>Finanzas locales</b><small>Datos en este navegador</small></p></div>
+        <div><i aria-hidden="true">{userName?.slice(0, 2).toLocaleUpperCase("es-CL") || "FN"}</i><p><b>{userName || "Cuenta personal"}</b><small>Sesión protegida</small></p></div>
+        <form action={logout}><button type="submit" className="logout-button">Cerrar sesión</button></form>
       </div>
     </aside>
   );
