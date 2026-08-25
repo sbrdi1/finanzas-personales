@@ -10,6 +10,8 @@ Finova es una aplicación full stack construida con Next.js App Router. La ruta 
 - `src/app/page.tsx`: límite de autenticación y composición del dashboard desde servidor.
 - `src/app/actions/`: mutaciones del servidor y revalidación.
 - `src/components/dashboard/`: componentes de presentación del dashboard, tabla y formulario.
+- `src/components/budgets/`: gestión de presupuestos mensuales y metas de ahorro.
+- `src/components/analytics/`: visualización del análisis financiero histórico.
 - `src/data/`: capa de acceso a datos `server-only` con autorización por propietario.
 - `src/lib/`: categorías, validación, formato y cálculos financieros reutilizables.
 - `src/types/`: contratos TypeScript del dominio.
@@ -35,6 +37,6 @@ Auth.js gestiona identidades OAuth y sesiones persistidas. La capa de datos obti
 - `Intl` para formato de moneda CLP y fechas en español de Chile.
 - CSS responsive sin dependencias de componentes externas.
 
-## Evolución sugerida
+## Estado actual
 
-La siguiente etapa debería completar presupuestos y cuentas financieras en la interfaz, añadir pruebas unitarias y end-to-end, observabilidad y una estrategia de respaldo y recuperación.
+La aplicación incluye gestión de movimientos, presupuestos mensuales, metas de ahorro y análisis financiero histórico. Como evolución futura quedan la administración de múltiples cuentas financieras desde la interfaz, pruebas end-to-end, observabilidad y una estrategia de respaldo y recuperación.
