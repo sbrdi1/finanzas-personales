@@ -3,14 +3,15 @@ import "server-only";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import type { AnalyticsData, MonthlyPoint } from "@/types/analytics";
+import type { Currency } from "@/types/transaction";
 
-export async function getAnalyticsForCurrentUser(months: 6 | 12): Promise<AnalyticsData> {
+export async function getAnalyticsForCurrentUser(months: 6 | 12, currency: Currency): Promise<AnalyticsData> {
   const session = await auth();
   if (!session?.user?.id) throw new Error("No autorizado");
   const now = new Date();
   const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - months + 1, 1));
   const rows = await prisma.transaction.findMany({
-    where: { userId: session.user.id, occurredAt: { gte: start } },
+    where: { userId: session.user.id, currency, occurredAt: { gte: start } },
     select: { amount: true, kind: true, occurredAt: true, category: { select: { name: true, color: true } } },
     orderBy: { occurredAt: "asc" },
   });

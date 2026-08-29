@@ -23,6 +23,7 @@ export function TransactionForm({ transaction, onCancel, onSubmit, serverError }
     defaultValues: {
       name: transaction?.name ?? "",
       amount: transaction?.amount ?? undefined,
+      currency: transaction?.currency ?? "CLP",
       kind: transaction?.kind ?? "expense",
       category: transaction?.category ?? expenseCategoryNames[0],
       date: transaction?.date ?? toIsoDate(new Date()),
@@ -59,7 +60,8 @@ export function TransactionForm({ transaction, onCancel, onSubmit, serverError }
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <fieldset className="switch"><legend className="sr-only">Tipo de movimiento</legend><label><input type="radio" value="expense" {...register("kind")} /><span>Gasto</span></label><label><input type="radio" value="income" {...register("kind")} /><span>Ingreso</span></label></fieldset>
           <label>Descripción<input {...register("name")} autoFocus placeholder="Ej. Compra supermercado" aria-invalid={Boolean(errors.name)} />{errors.name && <span className="field-error">{errors.name.message}</span>}</label>
-          <label>Monto (CLP)<input {...register("amount", { valueAsNumber: true })} type="number" min="1" inputMode="numeric" placeholder="0" aria-invalid={Boolean(errors.amount)} />{errors.amount && <span className="field-error">{errors.amount.message}</span>}</label>
+          <label>Moneda<select {...register("currency")} aria-invalid={Boolean(errors.currency)}><option value="CLP">Peso chileno (CLP)</option><option value="USD">Dólar estadounidense (USD)</option></select>{errors.currency && <span className="field-error">{errors.currency.message}</span>}</label>
+          <label>Monto<input {...register("amount", { valueAsNumber: true })} type="number" min="0.01" step="0.01" inputMode="decimal" placeholder="0" aria-invalid={Boolean(errors.amount)} />{errors.amount && <span className="field-error">{errors.amount.message}</span>}</label>
           {kind === "expense" && <label>Categoría<select {...register("category")} aria-invalid={Boolean(errors.category)}>{expenseCategoryNames.map((category) => <option key={category}>{category}</option>)}</select>{errors.category && <span className="field-error">{errors.category.message}</span>}</label>}
           <label>Fecha<input {...register("date")} type="date" aria-invalid={Boolean(errors.date)} />{errors.date && <span className="field-error">{errors.date.message}</span>}</label>
           {serverError && <p className="form-error" role="alert">{serverError}</p>}

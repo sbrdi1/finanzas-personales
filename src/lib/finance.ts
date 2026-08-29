@@ -1,4 +1,4 @@
-import type { Transaction, TransactionFilters, TransactionKind } from "@/types/transaction";
+import type { Currency, Transaction, TransactionFilters, TransactionKind } from "@/types/transaction";
 
 export type FinancialTotals = {
   income: number;
@@ -21,6 +21,13 @@ export function calculateTotals(transactions: readonly Transaction[]): Financial
     },
     { income: 0, expense: 0, balance: 0 },
   );
+}
+
+export function transactionsForCurrency(
+  transactions: readonly Transaction[],
+  currency: Currency,
+): Transaction[] {
+  return transactions.filter((transaction) => transaction.currency === currency);
 }
 
 export function calculateCategoryBreakdown(
@@ -65,7 +72,8 @@ export function filterTransactions(
     const matchesKind = filters.kind === "all" || transaction.kind === filters.kind;
     const matchesCategory = !filters.category || transaction.category === filters.category;
     const matchesDate = !filters.date || transaction.date === filters.date;
-    return matchesSearch && matchesKind && matchesCategory && matchesDate;
+    const matchesCurrency = !filters.currency || transaction.currency === filters.currency;
+    return matchesSearch && matchesKind && matchesCategory && matchesDate && matchesCurrency;
   });
 }
 

@@ -1,0 +1,20 @@
+.dashboard-period label,
+.range-switch label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dashboard-period select,
+.range-switch select {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 10px;
+}
+
+.range-switch {
+  align-items: center;
+}

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { TransactionKind as PrismaTransactionKind } from "@prisma/client";
+import { Currency as PrismaCurrency, TransactionKind as PrismaTransactionKind } from "@prisma/client";
 
 import { auth } from "@/auth";
 import { expenseCategories, incomeCategory } from "@/lib/categories";
@@ -46,6 +46,7 @@ export async function getTransactionsForCurrentUser(): Promise<Transaction[]> {
     name: row.name,
     category: row.category.name,
     amount: row.amount.toNumber(),
+    currency: row.currency,
     kind: row.kind === "INCOME" ? "income" : "expense",
     date: row.occurredAt.toISOString().slice(0, 10),
   }));
@@ -54,6 +55,7 @@ export async function getTransactionsForCurrentUser(): Promise<Transaction[]> {
 type TransactionMutation = {
   name: string;
   amount: number;
+  currency: "CLP" | "USD";
   kind: "income" | "expense";
   category: string;
   date: string;
@@ -80,6 +82,7 @@ export async function createOwnedTransaction(input: TransactionMutation): Promis
       ...relations,
       name: input.name,
       amount: input.amount,
+      currency: input.currency as PrismaCurrency,
       occurredAt: new Date(`${input.date}T00:00:00.000Z`),
     },
   });
@@ -94,6 +97,7 @@ export async function updateOwnedTransaction(id: string, input: TransactionMutat
       ...relations,
       name: input.name,
       amount: input.amount,
+      currency: input.currency as PrismaCurrency,
       occurredAt: new Date(`${input.date}T00:00:00.000Z`),
     },
   });

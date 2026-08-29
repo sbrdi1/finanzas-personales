@@ -1,7 +1,14 @@
-const currencyFormatter = new Intl.NumberFormat("es-CL", {
+const clpFormatter = new Intl.NumberFormat("es-CL", {
   style: "currency",
   currency: "CLP",
   maximumFractionDigits: 0,
+});
+
+const usdFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 
 const shortDateFormatter = new Intl.DateTimeFormat("es-CL", {
@@ -26,8 +33,8 @@ function fromIsoDate(date: string): Date {
   return new Date(`${date}T12:00:00`);
 }
 
-export function formatCurrency(value: number): string {
-  return currencyFormatter.format(value);
+export function formatCurrency(value: number, currency: "CLP" | "USD" = "CLP"): string {
+  return currency === "CLP" ? clpFormatter.format(value) : usdFormatter.format(value).replace("$", "US$");
 }
 
 export function formatShortDate(date: string): string {

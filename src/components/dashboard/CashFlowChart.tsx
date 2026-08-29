@@ -1,12 +1,14 @@
 import type { FinancialTotals } from "@/lib/finance";
 import { formatCurrency } from "@/lib/formatters";
+import type { Currency } from "@/types/transaction";
 
 type CashFlowChartProps = {
   totals: FinancialTotals;
   periodLabel: string;
+  currency: Currency;
 };
 
-export function CashFlowChart({ totals, periodLabel }: CashFlowChartProps) {
+export function CashFlowChart({ totals, periodLabel, currency }: CashFlowChartProps) {
   const max = Math.max(totals.income, totals.expense, 1);
   const savingRate = totals.income ? Math.round((totals.balance / totals.income) * 100) : null;
 
@@ -17,12 +19,12 @@ export function CashFlowChart({ totals, periodLabel }: CashFlowChartProps) {
         <span className="period-label">{periodLabel}</span>
       </div>
       <div className="chart">
-        <div className="axis"><span>{formatCurrency(max)}</span><span>{formatCurrency(max / 2)}</span><span>$0</span></div>
+        <div className="axis"><span>{formatCurrency(max, currency)}</span><span>{formatCurrency(max / 2, currency)}</span><span>{formatCurrency(0, currency)}</span></div>
         <div className="plot">
           <div className="barset"><i className="income" style={{ height: `${(totals.income / max) * 100}%` }} /><span>Ingresos</span></div>
           <div className="barset"><i className="expense" style={{ height: `${totals.expense ? Math.max(8, (totals.expense / max) * 100) : 0}%` }} /><span>Gastos</span></div>
           <div className="saving">
-            <span>Balance del mes</span><b>{formatCurrency(totals.balance)}</b>
+            <span>Balance del mes</span><b>{formatCurrency(totals.balance, currency)}</b>
             <small>{savingRate === null ? "Agrega un ingreso para calcular tu ahorro" : `Ahorro sobre ingresos: ${savingRate}%`}</small>
           </div>
         </div>

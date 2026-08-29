@@ -21,6 +21,11 @@ enum TransactionKind {
   EXPENSE
 }
 
+enum Currency {
+  CLP
+  USD
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -115,6 +120,7 @@ model Transaction {
   categoryId String
   name       String          @db.VarChar(80)
   amount     Decimal         @db.Decimal(14, 2)
+  currency   Currency        @default(CLP)
   kind       TransactionKind
   occurredAt DateTime        @db.Date
   createdAt  DateTime        @default(now())

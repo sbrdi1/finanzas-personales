@@ -1,13 +1,15 @@
 import { categoryColors } from "@/lib/categories";
 import type { CategoryTotal } from "@/lib/finance";
 import { formatCurrency } from "@/lib/formatters";
+import type { Currency } from "@/types/transaction";
 
 type CategoryBreakdownProps = {
   breakdown: CategoryTotal[];
   totalExpense: number;
+  currency: Currency;
 };
 
-export function CategoryBreakdown({ breakdown, totalExpense }: CategoryBreakdownProps) {
+export function CategoryBreakdown({ breakdown, totalExpense, currency }: CategoryBreakdownProps) {
   const gradient = breakdown.length
     ? `conic-gradient(${breakdown.map((item, index) => {
       const from = breakdown.slice(0, index).reduce((sum, current) => sum + current.amount, 0) / totalExpense * 100;
@@ -20,8 +22,8 @@ export function CategoryBreakdown({ breakdown, totalExpense }: CategoryBreakdown
       <div className="title"><div><h2>Gastos por categoría</h2><p>Distribución del mes actual</p></div></div>
       {breakdown.length ? (
         <div className="category">
-          <div className="donut" style={{ background: gradient }}><div><span>Total gastos</span><b>{formatCurrency(totalExpense)}</b></div></div>
-          <div className="legend">{breakdown.slice(0, 5).map((item) => <div key={item.category}><i style={{ background: categoryColors[item.category] }} /><span>{item.category}</span><b>{formatCurrency(item.amount)}</b></div>)}</div>
+          <div className="donut" style={{ background: gradient }}><div><span>Total gastos</span><b>{formatCurrency(totalExpense, currency)}</b></div></div>
+          <div className="legend">{breakdown.slice(0, 5).map((item) => <div key={item.category}><i style={{ background: categoryColors[item.category] }} /><span>{item.category}</span><b>{formatCurrency(item.amount, currency)}</b></div>)}</div>
         </div>
       ) : <div className="empty compact"><b>Sin gastos este mes</b><span>Registra un gasto para ver su distribución.</span></div>}
     </article>

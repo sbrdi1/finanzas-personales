@@ -6,6 +6,7 @@ export const transactionFormSchema = z
   .object({
     name: z.string().trim().min(2, "Ingresa al menos 2 caracteres").max(80, "Máximo 80 caracteres"),
     amount: z.coerce.number().positive("El monto debe ser mayor que cero").max(999_999_999, "El monto es demasiado alto"),
+    currency: z.enum(["CLP", "USD"]).default("CLP"),
     kind: z.enum(["income", "expense"]),
     category: z.string(),
     date: z.iso.date("Ingresa una fecha válida"),

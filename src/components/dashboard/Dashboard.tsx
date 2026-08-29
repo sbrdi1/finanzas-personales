@@ -12,12 +12,12 @@ import { SummaryCards } from "@/components/dashboard/SummaryCards";
 import { TransactionForm } from "@/components/dashboard/TransactionForm";
 import { TransactionsTable } from "@/components/dashboard/TransactionsTable";
 import { MonthSelector } from "@/components/dashboard/MonthSelector";
-import { calculateCategoryBreakdown, calculateTotals, filterTransactions, previousMonth, transactionsForMonth } from "@/lib/finance";
+import { calculateCategoryBreakdown, calculateTotals, filterTransactions, previousMonth, transactionsForCurrency, transactionsForMonth } from "@/lib/finance";
 import { formatMonth } from "@/lib/formatters";
 import type { TransactionFormValues } from "@/lib/transaction-schema";
-import type { Transaction, TransactionFilters } from "@/types/transaction";
+import type { Currency, Transaction, TransactionFilters } from "@/types/transaction";
 
-const initialFilters: TransactionFilters = { search: "", kind: "all", category: "", date: "" };
+const initialFilters: TransactionFilters = { search: "", kind: "all", category: "", date: "", currency: "" };
 
 type DashboardProps = {
   initialTransactions: Transaction[];
@@ -31,14 +31,16 @@ export function Dashboard({ initialTransactions, userName, selectedMonth, moveme
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [filters, setFilters] = useState<TransactionFilters>(initialFilters);
+  const [currency, setCurrency] = useState<Currency>("CLP");
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const openerRef = useRef<HTMLElement | null>(null);
   const today = useMemo(() => new Date(`${selectedMonth}-01T12:00:00`), [selectedMonth]);
 
-  const currentTransactions = useMemo(() => transactionsForMonth(initialTransactions, today), [initialTransactions, today]);
-  const previousTransactions = useMemo(() => transactionsForMonth(initialTransactions, previousMonth(today)), [initialTransactions, today]);
+  const currencyTransactions = useMemo(() => transactionsForCurrency(initialTransactions, currency), [currency, initialTransactions]);
+  const currentTransactions = useMemo(() => transactionsForMonth(currencyTransactions, today), [currencyTransactions, today]);
+  const previousTransactions = useMemo(() => transactionsForMonth(currencyTransactions, previousMonth(today)), [currencyTransactions, today]);
   const currentTotals = useMemo(() => calculateTotals(currentTransactions), [currentTransactions]);
   const previousTotals = useMemo(() => calculateTotals(previousTransactions), [previousTransactions]);
   const breakdown = useMemo(() => calculateCategoryBreakdown(currentTransactions), [currentTransactions]);
@@ -98,10 +100,10 @@ export function Dashboard({ initialTransactions, userName, selectedMonth, moveme
         <DashboardHeader date={today} userName={userName} onAdd={openCreateForm} />
         {actionError && <div className="action-error" role="alert">{actionError}</div>}
         {actionSuccess && <div className="notice success" role="status">{actionSuccess}</div>}
-        {!movementsOnly && <><div className="dashboard-period"><MonthSelector month={selectedMonth} /><span>Comparación contra el mes anterior</span></div><SummaryCards current={currentTotals} previous={previousTotals} />
+        {!movementsOnly && <><div className="dashboard-period"><label>Moneda <select value={currency} onChange={(event) => setCurrency(event.target.value as Currency)}><option value="CLP">CLP</option><option value="USD">USD</option></select></label><MonthSelector month={selectedMonth} /><span>Comparación contra el mes anterior</span></div><SummaryCards current={currentTotals} previous={previousTotals} currency={currency} />
         <section className="panels">
-          <CashFlowChart totals={currentTotals} periodLabel={formatMonth(today)} />
-          <CategoryBreakdown breakdown={breakdown} totalExpense={currentTotals.expense} />
+          <CashFlowChart totals={currentTotals} periodLabel={formatMonth(today)} currency={currency} />
+          <CategoryBreakdown breakdown={breakdown} totalExpense={currentTotals.expense} currency={currency} />
         </section></>}
         <TransactionsTable transactions={filteredTransactions} totalCount={initialTransactions.length} filters={filters} onFiltersChange={setFilters} isLoaded onAdd={openCreateForm} onEdit={openEditForm} onDelete={removeTransaction} />
         <footer>Finova · Tus finanzas, más claras.</footer>

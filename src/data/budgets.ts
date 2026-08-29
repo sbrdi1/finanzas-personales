@@ -42,7 +42,7 @@ export async function getBudgetPageData(month: string): Promise<{ budgets: Budge
     prisma.category.findMany({ where: { userId, kind: "EXPENSE" }, select: { id: true, name: true, color: true }, orderBy: { name: "asc" } }),
     prisma.transaction.groupBy({
       by: ["categoryId"],
-      where: { userId, kind: "EXPENSE", occurredAt: { gte: start, lt: end } },
+      where: { userId, kind: "EXPENSE", currency: "CLP", occurredAt: { gte: start, lt: end } },
       _sum: { amount: true },
     }),
   ]);
